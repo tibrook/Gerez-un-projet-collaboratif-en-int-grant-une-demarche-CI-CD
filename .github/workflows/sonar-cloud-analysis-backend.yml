@@ -11,7 +11,9 @@ on:
 jobs:
   sonarqube:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        working-directory: back
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -23,7 +25,7 @@ jobs:
         distribution: 'adopt'
 
     - name: Cache Maven packages
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.m2
         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -31,11 +33,9 @@ jobs:
           ${{ runner.os }}-maven-
 
     - name: Install dependencies
-      run: ./mvnw install -DskipTests
-      working-directory: ./back
+      run: mvn install 
 
     - name: Run SonarCloud analysis
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: ./mvnw sonar:sonar
-      working-directory: ./back
+      run: mvn sonar:sonar
