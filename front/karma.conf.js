@@ -1,6 +1,3 @@
-// Karma configuration file, see link for more information
-// https://karma-runner.github.io/1.0/config/configuration-file.html
-
 module.exports = function (config) {
   config.set({
     basePath: '',
@@ -25,7 +22,7 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, './coverage/bobapp'),
+      dir: require('path').join(__dirname, './coverage'),
       subdir: '.',
       reporters: [
         { type: 'html' },
@@ -33,13 +30,14 @@ module.exports = function (config) {
         { type: 'lcov' } // Generate lcov report
       ]
     },
-    reporters: ['progress', 'kjhtml'],
+    reporters: ['progress', 'kjhtml', 'coverage'], // Add 'coverage' here
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
-    autoWatch: true,
-    browsers: ['ChromeHeadless'],
-    singleRun: true,
-    restartOnFileChange: true
+    autoWatch: false, // Set to false to prevent re-running on file change
+    browsers: ['Chrome'],
+    singleRun: true, // Set to true to run tests once and exit
+    restartOnFileChange: false, // Ensure it does not restart on file change
+    browserNoActivityTimeout: 60000 // Increase timeout to prevent disconnection
   });
 };
