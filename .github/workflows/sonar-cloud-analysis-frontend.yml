@@ -28,7 +28,11 @@ jobs:
 
     - name: Install SonarCloud Scanner
       run: npm install -g sonarqube-scanner
-      
+
+    - name: Execute tests
+      run: |
+        npm run test -- --watch=false --browsers=ChromeHeadless
+
     - name: Run SonarCloud analysis
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
