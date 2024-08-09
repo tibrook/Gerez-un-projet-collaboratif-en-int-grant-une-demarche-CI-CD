@@ -16,8 +16,7 @@ COPY . .
 # Construire l'application Angular
 RUN npm run build -- --output-path=dist || cat /tmp/ng-*.log
 
-# Utilisez une image de serveur web NGINX pour servir l'application
-FROM nginx:alpine
+FROM nginx:latest as production
 
 # Copier les fichiers construits dans le répertoire de NGINX
 COPY --from=build /app/dist /usr/share/nginx/html
