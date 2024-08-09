@@ -1,27 +1,21 @@
 # Utilisez une image officielle d'Angular pour construire l'application
-FROM node:16 as build
+FROM node:16 AS build
 
-# Définir le répertoire de travail
 WORKDIR /app
 
-# Copier les fichiers package.json et package-lock.json
 COPY package*.json ./
 
-# Installer les dépendances
 RUN npm install
 
-# Copier tout le reste des fichiers de l'application
-COPY . .
+COPY src ./src
+COPY public ./public
 
-# Construire l'application Angular
 RUN npm run build -- --output-path=dist || cat /tmp/ng-*.log
 
-FROM nginx:latest as production
+FROM nginx:1.21.6-alpine AS production
 
-# Copier les fichiers construits dans le répertoire de NGINX
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Exposer le port 80
 EXPOSE 80
 
 # Démarrer NGINX
