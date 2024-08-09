@@ -39,7 +39,6 @@ jobs:
         context: ./front
         push: true
         tags: tibrook/bobapp-frontend:latest
-        node-version: '20'
 
 
     - name: Build and push backend Docker image
@@ -48,4 +47,3 @@ jobs:
         context: ./back
         push: true
         tags: tibrook/bobapp-backend:latest
-        node-version: '20'
