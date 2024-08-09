@@ -37,10 +37,20 @@ jobs:
         name: backend-coverage-report
         path: back/target/site/jacoco
 
+  check-coverage:
+    runs-on: ubuntu-latest
+    needs: test-and-coverage
+    steps:
+    - name: Download coverage report
+      uses: actions/download-artifact@v4
+      with:
+        name: backend-coverage-report
+        path: back/target/site/jacoco
+
     - name: Check test coverage
       run: |
         COVERAGE_THRESHOLD=80
-        COVERAGE=$(mvn test jacoco:report | grep -oP 'Total.*?(\d+\.\d+)%' | awk '{print $2}' | cut -d'%' -f1)
+        COVERAGE=$(grep -oP 'Total.*?(\d+\.\d+)%' back/target/site/jacoco/index.html | grep -oP '\d+\.\d+')
         if [ -z "$COVERAGE" ]; then
           echo "Error: Failed to retrieve coverage percentage."
           exit 1
