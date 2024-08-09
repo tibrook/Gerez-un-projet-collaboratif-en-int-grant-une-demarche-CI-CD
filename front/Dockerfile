@@ -7,15 +7,12 @@ COPY package*.json ./
 
 RUN npm install
 
-COPY src ./src
-COPY angular.json ./
-COPY tsconfig.json ./
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /usr/local/app/dist/bobapp /usr/share/nginx/html
 
-RUN npm run build -- --output-path=dist || cat /tmp/ng-*.log
+RUN npm run build 
 
 FROM nginx:1.21.6-alpine AS production
-
-COPY --from=build /app/dist /usr/share/nginx/html
 
 EXPOSE 80
 
