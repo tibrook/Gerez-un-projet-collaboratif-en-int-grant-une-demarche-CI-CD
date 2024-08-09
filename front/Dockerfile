@@ -1,21 +1,14 @@
-# Utilisez une image officielle d'Angular pour construire l'application
-FROM node:16 AS build
+FROM node:latest as build
 
 WORKDIR /usr/local/app
 COPY ./ /usr/local/app/
 
-COPY package*.json ./
-
-RUN npm install
+RUN yarn
+RUN npm run build
+ 
+FROM nginx:latest as production
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /usr/local/app/dist/bobapp /usr/share/nginx/html
 
-RUN npm run build 
-
-FROM nginx:1.21.6-alpine AS production
-
 EXPOSE 80
-
-# Démarrer NGINX
-CMD ["nginx", "-g", "daemon off;"]
