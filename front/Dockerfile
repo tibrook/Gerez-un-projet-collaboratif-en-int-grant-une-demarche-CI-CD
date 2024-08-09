@@ -1,7 +1,8 @@
 # Utilisez une image officielle d'Angular pour construire l'application
 FROM node:16 AS build
 
-WORKDIR /app
+WORKDIR /usr/local/app
+COPY ./ /usr/local/app/
 
 COPY package*.json ./
 
