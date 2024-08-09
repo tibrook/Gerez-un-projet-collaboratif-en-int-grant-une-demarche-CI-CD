@@ -55,8 +55,18 @@ jobs:
 
     - name: Check test coverage
       run: |
-        COVERAGE=$(grep 'Total' back/target/site/jacoco/index.html | grep -o '[0-9]\+.[0-9]\+%')
-        echo "Extracted coverage: $COVERAGE"
+        COVERAGE_THRESHOLD=80
+        COVERAGE=$(grep 'Total' back/target/site/jacoco/index.html | grep -o '[0-9]\{1,3\}%')
+        if [ -z "$COVERAGE" ]; then
+          echo "Error: Failed to retrieve coverage percentage."
+          exit 1
+        fi
+        COVERAGE=$(echo $COVERAGE | grep -o '[0-9]\{1,3\}')
+        echo "Detected coverage: $COVERAGE%"
+        if [ $(echo "$COVERAGE < $COVERAGE_THRESHOLD" | bc) -eq 1 ]; then
+          echo "Coverage ($COVERAGE%) is below the threshold ($COVERAGE_THRESHOLD%)"
+          exit 1
+        fi
         
   sonarcloud-analysis:
     runs-on: ubuntu-latest
