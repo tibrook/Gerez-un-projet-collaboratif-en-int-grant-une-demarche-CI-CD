@@ -40,7 +40,8 @@ jobs:
     - name: Check test coverage
       run: |
         COVERAGE_THRESHOLD=80
-        COVERAGE=$(mvn jacoco:report | grep -oP 'Total.*?(\d+\.\d+)%' | grep -oP '\d+\.\d+')
+        COVERAGE=$(grep -oP 'Total.*?(\d+\.\d+)%' back/target/site/jacoco/index.html | grep -oP '\d+\.\d+')
+        echo "Detected coverage: $COVERAGE%"
         if [ $(echo "$COVERAGE < $COVERAGE_THRESHOLD" | bc) -eq 1 ]; then
           echo "Coverage ($COVERAGE%) is below the threshold ($COVERAGE_THRESHOLD%)"
           exit 1
