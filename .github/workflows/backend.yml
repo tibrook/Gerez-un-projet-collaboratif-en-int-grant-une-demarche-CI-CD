@@ -31,7 +31,7 @@ jobs:
     - name: Run tests and generate coverage report
       run: mvn test jacoco:report
 
-      - name: Check test coverage
+    - name: Check test coverage
       run: |
         COVERAGE_THRESHOLD=80
         COVERAGE=$(mvn jacoco:report | grep -oP 'Total.*?(\d+\.\d+)%' | grep -oP '\d+\.\d+')
