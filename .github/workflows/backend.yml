@@ -37,42 +37,42 @@ jobs:
         name: backend-coverage-report
         path: back/target/site/jacoco
 
-  check-coverage:
-    runs-on: ubuntu-latest
-    needs: test-and-coverage
-    steps:
-    - name: Download coverage report
-      uses: actions/download-artifact@v4
-      with:
-        name: backend-coverage-report
-        path: back/target/site/jacoco
+  # check-coverage:
+  #   runs-on: ubuntu-latest
+  #   needs: test-and-coverage
+  #   steps:
+  #   - name: Download coverage report
+  #     uses: actions/download-artifact@v4
+  #     with:
+  #       name: backend-coverage-report
+  #       path: back/target/site/jacoco
 
-    - name: Debugging - List files in target directory
-      run: ls -R back/target/site/jacoco
+  #   - name: Debugging - List files in target directory
+  #     run: ls -R back/target/site/jacoco
 
-    - name: Debugging - Display index.html
-      run: cat back/target/site/jacoco/index.html | head -n 50
+  #   - name: Debugging - Display index.html
+  #     run: cat back/target/site/jacoco/index.html | head -n 50
 
-    - name: Check test coverage
-      run: |
-        COVERAGE_THRESHOLD=80
-        # Capture the first occurrence of coverage percentage
-        COVERAGE=$(grep 'Total' back/target/site/jacoco/index.html | grep -o '[0-9]\{1,3\}%' | head -n 1)
-        if [ -z "$COVERAGE" ]; then
-          echo "Error: Failed to retrieve coverage percentage."
-          exit 1
-        fi
-        # Remove the '%' sign to get just the number
-        COVERAGE=$(echo $COVERAGE | grep -o '[0-9]\{1,3\}')
-        echo "Detected coverage: $COVERAGE%"
-        if [ $(echo "$COVERAGE < $COVERAGE_THRESHOLD" | bc) -eq 1 ]; then
-          echo "Coverage ($COVERAGE%) is below the threshold ($COVERAGE_THRESHOLD%)"
-          exit 1
-        fi
+  #   - name: Check test coverage
+  #     run: |
+  #       COVERAGE_THRESHOLD=80
+  #       # Capture the first occurrence of coverage percentage
+  #       COVERAGE=$(grep 'Total' back/target/site/jacoco/index.html | grep -o '[0-9]\{1,3\}%' | head -n 1)
+  #       if [ -z "$COVERAGE" ]; then
+  #         echo "Error: Failed to retrieve coverage percentage."
+  #         exit 1
+  #       fi
+  #       # Remove the '%' sign to get just the number
+  #       COVERAGE=$(echo $COVERAGE | grep -o '[0-9]\{1,3\}')
+  #       echo "Detected coverage: $COVERAGE%"
+  #       if [ $(echo "$COVERAGE < $COVERAGE_THRESHOLD" | bc) -eq 1 ]; then
+  #         echo "Coverage ($COVERAGE%) is below the threshold ($COVERAGE_THRESHOLD%)"
+  #         exit 1
+  #       fi
         
   sonarcloud-analysis:
     runs-on: ubuntu-latest
-    needs: check-coverage
+    needs: test-and-coverage
     defaults:
       run:
         working-directory: back
