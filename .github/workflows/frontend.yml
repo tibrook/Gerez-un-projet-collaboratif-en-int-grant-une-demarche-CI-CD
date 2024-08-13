@@ -46,14 +46,11 @@ jobs:
           name: frontend-coverage-report
           path: front/coverage
 
-      - name: Debug - Display coverage line
-        run: grep 'Lines' front/coverage/lcov-report/index.html
-
       - name: Check test coverage
         run: |
           COVERAGE_THRESHOLD=80
           # Capture the coverage percentage for Lines from the summary
-          COVERAGE=$(grep 'Lines' front/coverage/lcov-report/index.html | grep -o '[0-9]\+\.[0-9]\+%' | head -n 1 | tr -d '%')
+          COVERAGE=$(grep -A1 '<span class="quiet">Lines</span>' front/coverage/lcov-report/index.html | grep -o '[0-9]\+\.[0-9]\+%' | head -n 1 | tr -d '%')
           if [ -z "$COVERAGE" ]; then
             echo "Error: Failed to retrieve coverage percentage."
             exit 1
