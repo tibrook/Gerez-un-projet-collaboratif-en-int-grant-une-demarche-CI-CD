@@ -49,8 +49,8 @@ jobs:
       - name: Check test coverage
         run: |
           COVERAGE_THRESHOLD=80
-          # Capture the first occurrence of coverage percentage from the lcov report
-          COVERAGE=$(grep -Po 'lines\.*:\K\d+\.\d+' front/coverage/lcov-report/index.html | head -n 1)
+          # Capture the lines coverage percentage from the summary
+          COVERAGE=$(grep -Po 'Lines\s*:\s*\K\d+\.\d+' front/coverage/lcov-report/index.html)
           if [ -z "$COVERAGE" ]; then
             echo "Error: Failed to retrieve coverage percentage."
             exit 1
