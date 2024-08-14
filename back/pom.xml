@@ -45,7 +45,6 @@
 				<configuration>
 					<excludes>
 						<exclude>com/openclassrooms/bobapp/model/**</exclude>
-						<exclude>com/openclassrooms/bobapp/data/**</exclude>
 					</excludes>
 				</configuration>
 				<executions>
