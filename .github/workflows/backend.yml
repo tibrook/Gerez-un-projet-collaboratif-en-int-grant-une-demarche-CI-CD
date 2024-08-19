@@ -95,13 +95,13 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-maven-
 
-    - name: Install dependencies
-      run: mvn install
+    # - name: Install dependencies
+    #   run: mvn install
 
     - name: Run SonarCloud analysis
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN -Dsonar.organization=software-developer -Dsonar.projectKey=software-developer_Gerez-un-projet-collaboratif-en-int-grant-une-demarche-CI-CD-Backend -Dsonar.host.url=https://sonarcloud.io
+      run: mvn sonar:sonar -Dsonar.login=$SONAR_TOKEN -Dsonar.organization=software-developer -Dsonar.host.url=https://sonarcloud.io
 
     - name: Check Quality Gate status
       run: |

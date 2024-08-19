@@ -16,6 +16,7 @@
 	<properties>
 		<java.version>11</java.version>
 		<sonar.projectName>Backend</sonar.projectName>
+		<sonar.projectKey>software-developer_Gerez-un-projet-collaboratif-en-int-grant-une-demarche-CI-CD-Backend</sonar.projectKey>
 	</properties>
 	<dependencies>
 		<dependency>
