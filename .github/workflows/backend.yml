@@ -95,8 +95,8 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-maven-
 
-    # - name: Install dependencies
-    #   run: mvn install
+    - name: Install dependencies
+      run: mvn install
 
     - name: Run SonarCloud analysis
       env:
