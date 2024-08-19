@@ -15,6 +15,8 @@
 	<description>L'application de joke par excellence !</description>
 	<properties>
 		<java.version>11</java.version>
+		<sonar.projectName>Backend</sonar.projectName>
+		<sonar.projectKey>software-developer_Gerez-un-projet-collaboratif-en-int-grant-une-demarche-CI-CD-Backend</sonar.projectKey>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -42,6 +44,11 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.5</version>
+				<configuration>
+					<excludes>
+						<exclude>com/openclassrooms/bobapp/model/**</exclude>
+					</excludes>
+				</configuration>
 				<executions>
 					<execution>
 						<goals>
@@ -56,6 +63,7 @@
 						</goals>
 					</execution>
 				</executions>
+				
 			</plugin>
 		</plugins>
 	</build>

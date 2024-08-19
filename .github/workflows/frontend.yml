@@ -36,6 +36,30 @@ jobs:
         name: frontend-coverage-report
         path: front/coverage
 
+  # check-coverage:
+  #     runs-on: ubuntu-latest
+  #     needs: test-and-coverage
+  #     steps:
+  #     - name: Download coverage report
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: frontend-coverage-report
+  #         path: front/coverage
+
+  #     - name: Check test coverage
+  #       run: |
+  #         COVERAGE_THRESHOLD=80
+  #         # Capture the coverage percentage for Lines from the summary
+  #         COVERAGE=$(grep -A1 '<span class="quiet">Lines</span>' front/coverage/lcov-report/index.html | grep -o '[0-9]\+\.[0-9]\+%' | head -n 1 | tr -d '%')
+  #         if [ -z "$COVERAGE" ]; then
+  #           echo "Error: Failed to retrieve coverage percentage."
+  #           exit 1
+  #         fi
+  #         echo "Detected coverage: $COVERAGE%"
+  #         if [ $(echo "$COVERAGE < $COVERAGE_THRESHOLD" | bc) -eq 1 ]; then
+  #           echo "Coverage ($COVERAGE%) is below the threshold ($COVERAGE_THRESHOLD%)"
+  #           exit 1
+  #         fi
   sonarcloud-analysis:
     runs-on: ubuntu-latest
     needs: test-and-coverage
@@ -61,8 +85,19 @@ jobs:
     - name: Run SonarCloud analysis
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: npx sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dsonar.organization=software-developer -Dsonar.projectKey=software-developer_Gerez-un-projet-collaboratif-en-int-grant-une-demarche-CI-CD-Frontend -Dsonar.host.url=https://sonarcloud.io
+      run: npx sonar-scanner -Dsonar.login=$SONAR_TOKEN -Dsonar.projectName=Frontend -Dsonar.organization=software-developer -Dsonar.projectKey=software-developer_Gerez-un-projet-collaboratif-en-int-grant-une-demarche-CI-CD-Frontend -Dsonar.host.url=https://sonarcloud.io
 
+    - name: Check Quality Gate status
+      run: |
+        STATUS=$(curl -s -u ${{ secrets.SONAR_TOKEN }}: \
+          "https://sonarcloud.io/api/qualitygates/project_status?projectKey=software-developer_Gerez-un-projet-collaboratif-en-int-grant-une-demarche-CI-CD-Frontend" \
+          | jq -r .projectStatus.status)
+        if [ "$STATUS" != "OK" ]; then
+          echo "Quality Gate failed: $STATUS"
+          exit 1
+        fi
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   docker:
     runs-on: ubuntu-latest
     needs: test-and-coverage
